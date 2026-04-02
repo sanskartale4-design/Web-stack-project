@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Skill Exchange Platform</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="toast-container"></div>
+    <nav id="navbar" class="hidden">
+        <div class="nav-container">
+            <h1 class="logo">SkillXchange</h1>
+            <ul class="nav-links">
+                <li><a href="#" data-target="dashboard-view" class="nav-link active">Dashboard</a></li>
+                <li><a href="#" data-target="add-skill-view" class="nav-link">Add Skill</a></li>
+                <li><a href="#" data-target="my-skills-view" class="nav-link">My Skills</a></li>
+                <li><a href="#" data-target="requests-view" class="nav-link">Requests</a></li>
+                <li><button id="logout-btn" class="btn btn-secondary btn-sm">Logout</button></li>
+            </ul>
+        </div>
+    </nav>
+    <main class="app-container">
+        <section id="auth-view" class="view active">
+            <div class="auth-container glass">
+                <div id="login-form-container">
+                    <h2>Welcome Back</h2>
+                    <p class="subtitle">Log in to exchange skills</p>
+                    <form id="login-form">
+                        <div class="form-group">
+                            <label for="login-email">Email</label>
+                            <input type="email" id="login-email" required placeholder="student@example.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="login-password">Password</label>
+                            <input type="password" id="login-password" required placeholder="••••••••">
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-full">Login</button>
+                        <p class="toggle-auth">Don't have an account? <a href="#" id="show-signup">Sign up</a></p>
+                    </form>
+                </div>
+                <div id="signup-form-container" class="hidden">
+                    <h2>Join SkillXchange</h2>
+                    <p class="subtitle">Create an account to get started</p>
+                    <form id="signup-form">
+                        <div class="form-group">
+                            <label for="signup-name">Full Name</label>
+                            <input type="text" id="signup-name" required placeholder="John Doe">
+                        </div>
+                        <div class="form-group">
+                            <label for="signup-email">Email</label>
+                            <input type="email" id="signup-email" required placeholder="student@example.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="signup-password">Password</label>
+                            <input type="password" id="signup-password" required placeholder="••••••••">
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-full">Create Account</button>
+                        <p class="toggle-auth">Already have an account? <a href="#" id="show-login">Log in</a></p>
+                    </form>
+                </div>
+            </div>
+        </section>
+        <section id="dashboard-view" class="view hidden">
+            <header class="section-header">
+                <h2>Welcome, <span id="welcome-name">Student</span>!</h2>
+                <p>Discover skills offered by other students.</p>
+            </header>
+            <div class="filter-bar glass">
+                <input type="text" id="search-skills" placeholder="Search skills..." class="search-input">
+                <select id="filter-category" class="filter-select">
+                    <option value="All">All Categories</option>
+                    <option value="Programming">Programming</option>
+                    <option value="Design">Design</option>
+                    <option value="Language">Language</option>
+                    <option value="Music">Music</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            <div id="all-skills-grid" class="skills-grid"></div>
+        </section>
+        <section id="add-skill-view" class="view hidden">
+            <div class="form-container glass mx-auto">
+                <h2>Offer a New Skill</h2>
+                <p class="subtitle">Share what you know with others.</p>
+                <form id="add-skill-form">
+                    <div class="form-group">
+                        <label for="skill-title">Skill Title</label>
+                        <input type="text" id="skill-title" required placeholder="e.g. Master JavaScript Basics">
+                    </div>
+                    <div class="form-group">
+                        <label for="skill-category">Category</label>
+                        <select id="skill-category" required>
+                            <option value="" disabled selected>Select a category</option>
+                            <option value="Programming">Programming</option>
+                            <option value="Design">Design</option>
+                            <option value="Language">Language</option>
+                            <option value="Music">Music</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="skill-desc">Description</label>
+                        <textarea id="skill-desc" rows="4" required placeholder="Describe what you plan to teach..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-full">Post Skill</button>
+                </form>
+            </div>
+        </section>
+        <section id="my-skills-view" class="view hidden">
+            <header class="section-header">
+                <h2>My Offered Skills</h2>
+                <p>Manage the skills you are offering.</p>
+            </header>
+            <div id="my-skills-grid" class="skills-grid"></div>
+        </section>
+        <section id="requests-view" class="view hidden">
+            <header class="section-header">
+                <h2>Manage Requests</h2>
+            </header>
+            <div class="requests-layout">
+                <div class="requests-column glass">
+                    <h3>Incoming Requests</h3>
+                    <p class="subtitle">People who want to learn from you</p>
+                    <div id="incoming-requests-list" class="requests-list"></div>
+                </div>
+                <div class="requests-column glass">
+                    <h3>My Requests</h3>
+                    <p class="subtitle">Skills you have requested</p>
+                    <div id="outgoing-requests-list" class="requests-list"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <div id="edit-modal" class="modal">
+        <div class="modal-content glass">
+            <span class="close-modal">&times;</span>
+            <h2>Edit Skill</h2>
+            <form id="edit-skill-form">
+                <input type="hidden" id="edit-skill-id">
+                <div class="form-group">
+                    <label for="edit-skill-title">Skill Title</label>
+                    <input type="text" id="edit-skill-title" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-skill-category">Category</label>
+                    <select id="edit-skill-category" required>
+                        <option value="Programming">Programming</option>
+                        <option value="Design">Design</option>
+                        <option value="Language">Language</option>
+                        <option value="Music">Music</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="edit-skill-desc">Description</label>
+                    <textarea id="edit-skill-desc" rows="4" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Save Changes</button>
+            </form>
+        </div>
+    </div>
+    <div id="request-modal" class="modal">
+        <div class="modal-content glass">
+            <span class="close-request-modal">&times;</span>
+            <h2>Request Skill</h2>
+            <p id="request-skill-info" class="mb-4">You are requesting ...</p>
+            <form id="request-skill-form">
+                <input type="hidden" id="request-skill-id">
+                <input type="hidden" id="request-provider-email">
+                <div class="form-group">
+                    <label for="request-message">Message (Optional)</label>
+                    <textarea id="request-message" rows="3" placeholder="Hi, I would love to learn this from you!"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Send Request</button>
+            </form>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
