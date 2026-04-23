@@ -1,0 +1,9 @@
+{
+  "name": "web-stack-project",
+  "version": "1.0.0",
+  "description": "Student Skill Exchange Platform",
+  "scripts": {
+    "start": "node backend/server.js",
+    "install": "cd backend && npm install"
+  }
+}

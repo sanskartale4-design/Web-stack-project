@@ -1,4 +1,4 @@
-const API_URL = 'https://web-stack-project-production-fceb.up.railway.app/api';
+const API_URL = '/api';
 let currentUser = null;
 let token = localStorage.getItem('token') || null;
 
@@ -52,7 +52,18 @@ async function apiCall(endpoint, method = 'GET', body = null) {
     if (body) options.body = JSON.stringify(body);
 
     const response = await fetch(`${API_URL}${endpoint}`, options);
-    const data = await response.json();
+    
+    // Safety check: Make sure what we got back is actually JSON
+    const contentType = response.headers.get("content-type");
+    let data;
+    
+    if (contentType && contentType.includes("application/json")) {
+        data = await response.json();
+    } else {
+        // If Railway returned a 502/503 HTML page or our catch block returned text
+        const textError = await response.text();
+        throw new Error(textError ? textError.substring(0, 50) + "..." : `HTTP Error ${response.status}`);
+    }
 
     if (!response.ok) {
         throw new Error(data.message || 'Something went wrong');
